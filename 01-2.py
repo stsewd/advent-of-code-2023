@@ -16,62 +16,58 @@ words_to_digits = {
 
 
 def get_first_digit(line: str) -> str:
-    index = None
     digit = None
+    i_end = len(line) - 1
 
     # Check for digits
     for i, c in enumerate(line):
         if c.isdigit():
             digit = c
-            index = i
+            i_end = i - 1
             break
 
     # If we didn't find a digit, or if the digit is not in the first 3 characters,
     # we need to check for words.
-    need_to_check_for_words = index is None or index > 2
-    if not need_to_check_for_words:
+    if i_end < 2:
         assert digit is not None
         return digit
 
     # Check for words
     for digit_in_words in words_to_digits:
-        new_index = line.find(digit_in_words)
-        if new_index != -1 and (index is None or new_index < index):
+        index = line.find(digit_in_words, 0, i_end + 1)
+        if index != -1:
             digit = words_to_digits[digit_in_words]
-            index = new_index
-            if index < 3:
+            if index < 2:
                 break
+            i_end = index + len(digit_in_words) - 1
 
     assert digit is not None
     return digit
 
 
 def get_last_digit(line: str) -> str:
-    index = None
     digit = None
+    i_start = 0
 
     # Check for digits
     for i, c in enumerate(reversed(line)):
         if c.isdigit():
             digit = c
-            index = len(line) - i - 1
+            i_start = len(line) - i - 1
             break
 
-    # If we didn't find a digit, or if the digit is not in the last 3 characters,
-    # we need to check for words.
-    need_to_check_for_words = index is None or index < len(line) - 3
-    if not need_to_check_for_words:
+    if i_start > len(line) - 3:
         assert digit is not None
         return digit
 
     # Check for words
     for digit_in_words in words_to_digits:
-        new_index = line.rfind(digit_in_words)
-        if new_index != -1 and (index is None or new_index > index):
+        index = line.rfind(digit_in_words, i_start)
+        if index != -1:
             digit = words_to_digits[digit_in_words]
-            index = new_index
             if index > len(line) - 3:
                 break
+            i_start = index
 
     assert digit is not None
     return digit
@@ -87,8 +83,8 @@ def solve(text: str) -> int:
     for line in text.splitlines():
         first_digit = get_first_digit(line)
         last_digit = get_last_digit(line)
-        d = int(f"{first_digit}{last_digit}")
-        total += d
+        number = int(first_digit + last_digit)
+        total += number
     return total
 
 
