@@ -39,6 +39,8 @@ def get_first_digit(line: str) -> str:
         if new_index != -1 and (index is None or new_index < index):
             digit = words_to_digits[digit_in_words]
             index = new_index
+            if index < 3:
+                break
 
     assert digit is not None
     return digit
@@ -68,12 +70,19 @@ def get_last_digit(line: str) -> str:
         if new_index != -1 and (index is None or new_index > index):
             digit = words_to_digits[digit_in_words]
             index = new_index
+            if index > len(line) - 3:
+                break
 
     assert digit is not None
     return digit
 
 
 def solve(text: str) -> int:
+    """
+    A solution using only string methods.
+
+    This solution is slower than solve2, but it's more imperative.
+    """
     total = 0
     for line in text.splitlines():
         first_digit = get_first_digit(line)
