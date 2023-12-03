@@ -47,3 +47,6 @@ def test():
         """
     ).strip()
     assert solve(text, setup={"red": 12, "green": 13, "blue": 14}) == 8
+
+    text = Path("02.txt").read_text()
+    assert solve(text, setup={"red": 12, "green": 13, "blue": 14}) == 2162

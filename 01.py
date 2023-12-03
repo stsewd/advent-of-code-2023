@@ -39,3 +39,6 @@ def test():
         """
     ).strip()
     assert solve(text) == 142
+
+    text = Path("01.txt").read_text()
+    assert solve(text) == 53334
