@@ -1,16 +1,34 @@
 from pathlib import Path
 from textwrap import dedent
 
+cache = {}
+
+
+def get_card_points(cards, card) -> int:
+    if card in cache:
+        return cache[card]
+
+    total = cards[card]
+    for i in range(cards[card]):
+        total += get_card_points(cards, card + i + 1)
+
+    cache[card] = total
+    return total
+
 
 def solve(text: str) -> int:
-    total = 0
+    cards = []
     for line in text.splitlines():
         winning_numbers, numbers = line.split(":", maxsplit=1)[1].split("|", maxsplit=1)
         winning_numbers = set(winning_numbers.split())
         numbers = set(numbers.split())
         resulted_numbers = winning_numbers.intersection(numbers)
-        if resulted_numbers:
-            total += 2 ** (len(resulted_numbers) - 1)
+        cards.append(len(resulted_numbers))
+
+    cache.clear()
+    total = 0
+    for i in range(len(cards)):
+        total += get_card_points(cards, i) + 1
     return total
 
 
@@ -34,7 +52,7 @@ def test():
         Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
         """
     ).strip()
-    assert solve(text) == 13
+    assert solve(text) == 30
 
     text = Path("04.txt").read_text()
-    assert solve(text) == 26914
+    assert solve(text) == 13080971
