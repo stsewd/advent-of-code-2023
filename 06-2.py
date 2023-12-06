@@ -58,4 +58,4 @@ def test():
     assert solve(text) == 71503
 
     text = Path("06.txt").read_text()
-    assert solve(text) == 0
+    assert solve(text) == 24655068
