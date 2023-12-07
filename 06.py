@@ -1,4 +1,5 @@
 from pathlib import Path
+import math
 from textwrap import dedent
 
 
@@ -9,17 +10,21 @@ def solve(text: str) -> int:
 
     total = 1
     for i in range(len(times)):
-        t = times[i]
-        d = distances[i]
-        half = t // 2
-        for i in range(1, half + 1):
-            r = i * (t - i)
-            if r > d:
-                subtotal = ((half - i) + 1) * 2
-                if t % 2 == 0:
-                    subtotal -= 1
-                total *= subtotal
-                break
+        time = times[i]
+        distance = distances[i]
+        i = math.ceil((time - math.sqrt((time**2) - (4 * distance))) / 2)
+        if (i * (time - i)) <= distance:
+            i += 1
+
+        max_peek = (time - 1) // 2
+        if time % 2 == 0:
+            max_peek += 1
+        if i < max_peek:
+            if time % 2 == 0:
+                subtotal = (max_peek - i) * 2 + 1
+            else:
+                subtotal = (max_peek - i + 1) * 2
+            total *= subtotal
     return total
 
 
@@ -40,6 +45,15 @@ def test():
         """
     ).strip()
     assert solve(text) == 4
+
+    text = dedent(
+        """
+        Time:      8
+        Distance:  9
+        """
+    ).strip()
+    assert solve(text) == 5
+
     text = dedent(
         """
         Time:      15
@@ -47,6 +61,7 @@ def test():
         """
     ).strip()
     assert solve(text) == 8
+
     text = dedent(
         """
         Time:      30
@@ -54,6 +69,7 @@ def test():
         """
     ).strip()
     assert solve(text) == 9
+
     text = dedent(
         """
         Time:      7  15   30
