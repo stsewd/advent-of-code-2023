@@ -15,7 +15,6 @@ CARDS = {
     "A": 14,
     "K": 13,
     "Q": 12,
-    "J": 11,
     "T": 10,
     "9": 9,
     "8": 8,
@@ -25,40 +24,80 @@ CARDS = {
     "4": 4,
     "3": 3,
     "2": 2,
+    "J": 1,
 }
 
 
 def get_hand_type(hand):
+    if not hand:
+        return HIGH_CARD
+
     counter = Counter(hand)
 
-    if len(counter) == 1:
+    most_common = [n for _, n in counter.most_common(2)]
+    if len(most_common) == 1:
+        most_common.append(0)
+
+    if most_common[0] == 5:
         return FIVE_OF_A_KIND
 
-    if len(counter) == 2:
-        most_common = counter.most_common(1)[0][1]
-        if most_common == 4:
-            return FOUR_OF_A_KIND
-        if most_common == 3:
+    if most_common[0] == 4:
+        return FOUR_OF_A_KIND
+
+    if most_common[0] == 3:
+        if most_common[1] == 2:
             return FULL_HOUSE
+        return THREE_OF_A_KIND
 
-    if len(counter) == 3:
-        most_common = counter.most_common(1)[0][1]
-        if most_common == 3:
-            return THREE_OF_A_KIND
-        if most_common == 2:
+    if most_common[0] == 2:
+        if most_common[1] == 2:
             return TWO_PAIR
-
-    if len(counter) == 4:
         return ONE_PAIR
 
     return HIGH_CARD
 
 
+def get_hand_type_with_jokers(hand):
+    hand_without_jokers = hand.replace("J", "")
+    jokers = len(hand) - len(hand_without_jokers)
+
+    hand_type = get_hand_type(hand_without_jokers)
+
+    if not jokers:
+        return hand_type
+
+    if hand_type == FOUR_OF_A_KIND:
+        return FIVE_OF_A_KIND
+
+    if hand_type == THREE_OF_A_KIND:
+        if jokers == 1:
+            return FOUR_OF_A_KIND
+        return FIVE_OF_A_KIND
+
+    if hand_type == TWO_PAIR:
+        return FULL_HOUSE
+
+    if hand_type == ONE_PAIR:
+        if jokers == 1:
+            return THREE_OF_A_KIND
+        if jokers == 2:
+            return FOUR_OF_A_KIND
+        return FIVE_OF_A_KIND
+
+    if jokers == 1:
+        return ONE_PAIR
+    if jokers == 2:
+        return THREE_OF_A_KIND
+    if jokers == 3:
+        return FOUR_OF_A_KIND
+    return FIVE_OF_A_KIND
+
+
 def cmp(a, b):
     a = a[0]
     b = b[0]
-    a_type = get_hand_type(a)
-    b_type = get_hand_type(b)
+    a_type = get_hand_type_with_jokers(a)
+    b_type = get_hand_type_with_jokers(b)
 
     if a_type != b_type:
         return a_type - b_type
@@ -100,7 +139,7 @@ def test():
         QQQJA 483
         """
     ).strip()
-    assert solve(text) == 6440
+    assert solve(text) == 5905
 
     text = Path("07.txt").read_text()
-    assert solve(text) == 250946742
+    assert solve(text) == 251824095
