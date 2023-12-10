@@ -1,9 +1,5 @@
 from pathlib import Path
 from textwrap import dedent
-import sys
-print(sys.getrecursionlimit())
-sys.setrecursionlimit(100000)
-
 
 START = "S"
 VERTICAL_PIPE = "|"
@@ -26,6 +22,7 @@ DOWN = "down"
 LEFT = "left"
 RIGHT = "right"
 
+
 def get_start(maze: list[str]) -> tuple[int, int]:
     for i in range(len(maze)):
         for j in range(len(maze[i])):
@@ -34,55 +31,83 @@ def get_start(maze: list[str]) -> tuple[int, int]:
     return (0, 0)
 
 
-def solve_maze(maze: list[str], start: tuple[int, int], previous=None) -> int:
-    i, j = start
-    current_pipe = maze[i][j]
-
-    # Check up
-    if previous != UP and current_pipe in [START, VERTICAL_PIPE, NORTH_TO_EAST, NORTH_TO_WEST] and i > 0:
-        pipe = maze[i - 1][j]
-        if pipe == START:
-            return 1
-        if pipe in [VERTICAL_PIPE, SOUTH_TO_EAST, SOUTH_TO_WEST]:
-            r = solve_maze(maze, (i - 1, j), DOWN)
-            if r != -1:
-                return r + 1
-    # Check down
-    if previous != DOWN and current_pipe in [START, VERTICAL_PIPE, SOUTH_TO_EAST, SOUTH_TO_WEST] and i < len(maze) - 1:
-        pipe = maze[i + 1][j]
-        if pipe == START:
-            return 1
-        if pipe in [VERTICAL_PIPE, NORTH_TO_EAST, NORTH_TO_WEST]:
-            r = solve_maze(maze, (i + 1, j), UP)
-            if r != -1:
-                return r + 1
-
-    # Check left
-    if previous != LEFT and current_pipe in [START, HORIZONTAL_PIPE, NORTH_TO_WEST, SOUTH_TO_WEST] and j > 0:
-        pipe = maze[i][j - 1]
-        if pipe == START:
-            return 1
-        if pipe in [HORIZONTAL_PIPE, SOUTH_TO_EAST, NORTH_TO_EAST]:
-            r = solve_maze(maze, (i, j - 1), RIGHT)
-            if r != -1:
-                return r + 1
-
-    # Check right
-    if previous != RIGHT and current_pipe in [START, HORIZONTAL_PIPE, NORTH_TO_EAST, SOUTH_TO_EAST] and j < len(maze[i]) - 1:
-        pipe = maze[i][j + 1]
-        if pipe == START:
-            return 1
-        if pipe in [HORIZONTAL_PIPE, SOUTH_TO_WEST, NORTH_TO_WEST]:
-            r = solve_maze(maze, (i, j + 1), LEFT)
-            if r != -1:
-                return r + 1
-
-    return -1
-
-
 def solve(text: str) -> int:
     maze = text.splitlines()
-    return solve_maze(maze, get_start(maze), None) // 2
+    i, j = get_start(maze)
+
+    direction = None
+
+    # Up
+    if i > 0 and maze[i - 1][j] in [VERTICAL_PIPE, SOUTH_TO_EAST, SOUTH_TO_WEST]:
+        i -= 1
+        direction = UP
+    # Down
+    elif i < len(maze) - 1 and maze[i + 1][j] in [
+        VERTICAL_PIPE,
+        NORTH_TO_EAST,
+        NORTH_TO_WEST,
+    ]:
+        i += 1
+        direction = DOWN
+    # Left
+    elif j > 0 and maze[i][j - 1] in [HORIZONTAL_PIPE, SOUTH_TO_EAST, NORTH_TO_EAST]:
+        j -= 1
+        direction = LEFT
+    # Right
+    elif j < len(maze[i]) - 1 and maze[i][j + 1] in [
+        HORIZONTAL_PIPE,
+        SOUTH_TO_WEST,
+        NORTH_TO_WEST,
+    ]:
+        j += 1
+        direction = RIGHT
+
+    steps = 1
+    while maze[i][j] != START:
+        pipe = maze[i][j]
+        if pipe == VERTICAL_PIPE:
+            if direction == UP:
+                i -= 1
+            else:
+                i += 1
+
+        elif pipe == SOUTH_TO_EAST:
+            if direction == UP:
+                j += 1
+                direction = RIGHT
+            else:
+                i += 1
+                direction = DOWN
+        elif pipe == HORIZONTAL_PIPE:
+            if direction == LEFT:
+                j -= 1
+            else:
+                j += 1
+        elif pipe == SOUTH_TO_WEST:
+            if direction == UP:
+                j -= 1
+                direction = LEFT
+            else:
+                i += 1
+                direction = DOWN
+        elif pipe == NORTH_TO_WEST:
+            if direction == DOWN:
+                j -= 1
+                direction = LEFT
+            else:
+                i -= 1
+                direction = UP
+        elif pipe == NORTH_TO_EAST:
+            if direction == DOWN:
+                j += 1
+                direction = RIGHT
+            else:
+                i -= 1
+                direction = UP
+
+        steps += 1
+
+    return steps // 2
 
 
 def main():
