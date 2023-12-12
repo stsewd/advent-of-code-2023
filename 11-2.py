@@ -89,7 +89,7 @@ def test():
         #...#.....
         """
     ).strip()
-    assert solve(text) == 374
+    assert solve(text, 100) == 8410
 
     text = Path("11.txt").read_text()
-    assert solve(text) == 9509330
+    assert solve(text, 1000000) == 635832237682
