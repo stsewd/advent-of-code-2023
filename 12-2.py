@@ -2,6 +2,9 @@ from pathlib import Path
 from textwrap import dedent
 
 
+cache = {}
+
+
 def get_valid_arrangements(
     acc: int,
     springs: str,
@@ -10,50 +13,67 @@ def get_valid_arrangements(
     group_i: int,
     spring: str | None = None,
 ) -> int:
+    key = (acc, spring_i, group_i, spring)
+    if key in cache:
+        return cache[key]
+
     if spring_i >= len(springs):
         if acc:
             if group_i == len(groups) - 1 and acc == groups[group_i]:
+                cache[key] = 1
                 return 1
+            cache[key] = 0
             return 0
 
         if group_i >= len(groups):
+            cache[key] = 1
             return 1
 
+        cache[key] = 0
         return 0
 
     spring = spring or springs[spring_i]
     if spring == ".":
         if acc:
             if group_i >= len(groups):
+                cache[key] = 0
                 return 0
             if acc != groups[group_i]:
+                cache[key] = 0
                 return 0
-            return get_valid_arrangements(
+            r = get_valid_arrangements(
                 acc=0,
                 springs=springs,
                 spring_i=spring_i + 1,
                 groups=groups,
                 group_i=group_i + 1,
             )
+            cache[key] = r
+            return r
 
-        return get_valid_arrangements(
+        r = get_valid_arrangements(
             acc=0,
             springs=springs,
             spring_i=spring_i + 1,
             groups=groups,
             group_i=group_i,
         )
+        cache[key] = r
+        return r
 
     if spring == "#":
         if group_i >= len(groups):
+            cache[key] = 0
             return 0
-        return get_valid_arrangements(
+        r = get_valid_arrangements(
             acc=acc + 1,
             springs=springs,
             spring_i=spring_i + 1,
             groups=groups,
             group_i=group_i,
         )
+        cache[key] = r
+        return r
 
     if spring == "?":
         a = get_valid_arrangements(
@@ -72,9 +92,21 @@ def get_valid_arrangements(
             group_i=group_i,
             spring=".",
         )
-        return a + b
+        r = a + b
+        cache[key] = r
+        return r
 
     return 0
+
+
+def expand(springs: str, groups: list[int]) -> tuple[str, list[int]]:
+    expanded_springs = []
+    expanded_groups = []
+    for _ in range(5):
+        expanded_springs.append(springs)
+        expanded_groups += groups
+
+    return "?".join(expanded_springs), expanded_groups
 
 
 def solve(text: str) -> int:
@@ -82,6 +114,8 @@ def solve(text: str) -> int:
     total = 0
     for springs, groups in springs_and_groups:
         groups = [int(x) for x in groups.split(",")]
+        springs, groups = expand(springs, groups)
+        cache.clear()
         total += get_valid_arrangements(
             acc=0,
             springs=springs,
@@ -112,7 +146,7 @@ def test():
         ?###???????? 3,2,1
         """
     ).strip()
-    assert solve(text) == 21
+    assert solve(text) == 525152
 
     text = Path("12.txt").read_text()
-    assert solve(text) == 6488
+    assert solve(text) == 815364548481
