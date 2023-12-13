@@ -6,14 +6,15 @@ def find_middle(pattern: list[int], no_valid: int) -> int:
     for i in range(len(pattern) - 1):
         index = len(pattern) - i - 1
         start = index
+        if start == no_valid:
+            continue
         end = min((len(pattern) - index), index)
         for j in range(index, index + end):
             index -= 1
             if pattern[j] != pattern[index]:
                 break
         else:
-            if start != no_valid:
-                return start
+            return start
     return -1
 
 
