@@ -146,6 +146,8 @@ def test():
     assert solve(text) == 281
     assert solve2(text) == 281
 
-    text = Path("01.txt").read_text()
-    assert solve(text) == 52834
-    assert solve2(text) == 52834
+    p = Path("01.txt")
+    if p.exists():
+        text = p.read_text()
+        assert solve(text) == 52834
+        assert solve2(text) == 52834

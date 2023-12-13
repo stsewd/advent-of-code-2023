@@ -8,14 +8,6 @@ NORTH_TO_EAST = "L"
 NORTH_TO_WEST = "J"
 SOUTH_TO_EAST = "F"
 SOUTH_TO_WEST = "7"
-PIPES = [
-    VERTICAL_PIPE,
-    HORIZONTAL_PIPE,
-    NORTH_TO_EAST,
-    NORTH_TO_WEST,
-    SOUTH_TO_EAST,
-    SOUTH_TO_WEST,
-]
 
 UP = "up"
 DOWN = "down"
@@ -70,7 +62,6 @@ def solve(text: str) -> int:
                 i -= 1
             else:
                 i += 1
-
         elif pipe == SOUTH_TO_EAST:
             if direction == UP:
                 j += 1
@@ -142,5 +133,7 @@ def test():
     ).strip()
     assert solve(text) == 8
 
-    text = Path("10.txt").read_text()
-    assert solve(text) == 6800
+    p = Path("10.txt")
+    if p.exists():
+        text = p.read_text()
+        assert solve(text) == 6800

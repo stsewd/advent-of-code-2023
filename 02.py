@@ -48,5 +48,7 @@ def test():
     ).strip()
     assert solve(text, setup={"red": 12, "green": 13, "blue": 14}) == 8
 
-    text = Path("02.txt").read_text()
-    assert solve(text, setup={"red": 12, "green": 13, "blue": 14}) == 2162
+    p = Path("02.txt")
+    if p.exists():
+        text = p.read_text()
+        assert solve(text, setup={"red": 12, "green": 13, "blue": 14}) == 2162

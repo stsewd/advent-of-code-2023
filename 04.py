@@ -36,5 +36,7 @@ def test():
     ).strip()
     assert solve(text) == 13
 
-    text = Path("04.txt").read_text()
-    assert solve(text) == 26914
+    p = Path("03.txt")
+    if p.exists():
+        text = p.read_text()
+        assert solve(text) == 26914

@@ -54,5 +54,7 @@ def test():
     ).strip()
     assert solve(text) == 30
 
-    text = Path("04.txt").read_text()
-    assert solve(text) == 13080971
+    p = Path("04.txt")
+    if p.exists():
+        text = p.read_text()
+        assert solve(text) == 13080971
