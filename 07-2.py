@@ -1,3 +1,4 @@
+import pytest
 from textwrap import dedent
 from pathlib import Path
 from functools import cmp_to_key
@@ -141,7 +142,10 @@ def test():
     ).strip()
     assert solve(text) == 5905
 
+
+def test_input():
     p = Path("07.txt")
-    if p.exists():
-        text = p.read_text()
-        assert solve(text) == 251824095
+    if not p.exists():
+        pytest.skip(f"{p} does not exist")
+    text = p.read_text()
+    assert solve(text) == 251824095

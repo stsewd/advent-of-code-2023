@@ -1,3 +1,4 @@
+import pytest
 from pathlib import Path
 from textwrap import dedent
 
@@ -148,7 +149,10 @@ def test():
     ).strip()
     assert solve(text) == 525152
 
+
+def test_input():
     p = Path("12.txt")
-    if p.exists():
-        text = p.read_text()
-        assert solve(text) == 815364548481
+    if not p.exists():
+        pytest.skip(f"{p} does not exist")
+    text = p.read_text()
+    assert solve(text) == 815364548481
