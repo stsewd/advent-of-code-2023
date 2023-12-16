@@ -87,32 +87,32 @@ def traverse(
 
 def solve(text: str) -> int:
     matrix = [[c for c in line] for line in text.splitlines()]
-    total = 0
+    result = 0
     for i in range(len(matrix)):
         beans = set()
         traverse(matrix, (i, 0), RIGHT, beans)
         n_beans = len(set((i, j) for i, j, _ in beans))
-        total = max(total, n_beans)
+        result = max(result, n_beans)
 
     for j in range(len(matrix[0])):
         beans = set()
         traverse(matrix, (0, j), DOWN, beans)
         n_beans = len(set((i, j) for i, j, _ in beans))
-        total = max(total, n_beans)
+        result = max(result, n_beans)
 
     for i in range(len(matrix)):
         beans = set()
         traverse(matrix, (i, len(matrix[i]) - 1), LEFT, beans)
         n_beans = len(set((i, j) for i, j, _ in beans))
-        total = max(total, n_beans)
+        result = max(result, n_beans)
 
     for j in range(len(matrix[0])):
         beans = set()
         traverse(matrix, (len(matrix) - 1, j), UP, beans)
         n_beans = len(set((i, j) for i, j, _ in beans))
-        total = max(total, n_beans)
+        result = max(result, n_beans)
 
-    return total
+    return result
 
 
 if __name__ == "__main__":
