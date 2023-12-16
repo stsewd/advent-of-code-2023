@@ -1,3 +1,4 @@
+import sys
 import pytest
 from functools import reduce
 from pathlib import Path
@@ -27,13 +28,9 @@ def solve(text: str) -> int:
     return total
 
 
-def main():
-    input_text = Path("02.txt").read_text()
-    print(solve(input_text))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text()))
 
 
 def test():

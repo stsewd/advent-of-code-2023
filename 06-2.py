@@ -1,3 +1,4 @@
+import sys
 import pytest
 import math
 from pathlib import Path
@@ -23,13 +24,9 @@ def solve(text: str) -> int:
     return 0
 
 
-def main():
-    text = Path("06.txt").read_text()
-    print(solve(text))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text()))
 
 
 def test():

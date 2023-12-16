@@ -1,3 +1,4 @@
+import sys
 import pytest
 from pathlib import Path
 import itertools
@@ -66,13 +67,9 @@ def solve(text: str, expansion=2) -> int:
     return total
 
 
-def main():
-    text = Path("11.txt").read_text()
-    print(solve(text))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text()))
 
 
 def test():

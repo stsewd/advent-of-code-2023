@@ -1,3 +1,4 @@
+import sys
 import pytest
 from pathlib import Path
 from textwrap import dedent
@@ -61,13 +62,9 @@ def solve(text: str) -> int:
     return min(start for start, _ in seeds)
 
 
-def main():
-    text = Path("05.txt").read_text()
-    print(solve(text))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text()))
 
 
 def test():

@@ -1,20 +1,16 @@
+import sys
 import pytest
 from pathlib import Path
 from textwrap import dedent
 
 
 def is_possible(game_data: str, setup: dict[str, int]) -> bool:
-    total_cubes_allowed = sum(setup.values())
     for game_set in game_data.split(";"):
         cubes_data = game_set.strip().split(",")
-        total_cubes = 0
         for cube_data in cubes_data:
             n, color = cube_data.strip().split(maxsplit=1)
             n = int(n)
             if n > setup[color]:
-                return False
-            total_cubes += n
-            if total_cubes > total_cubes_allowed:
                 return False
     return True
 
@@ -28,13 +24,9 @@ def solve(text: str, setup: dict[str, int]) -> int:
     return total
 
 
-def main():
-    input_text = Path("02.txt").read_text()
-    print(solve(input_text, setup={"red": 12, "green": 13, "blue": 14}))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text(), setup={"red": 12, "green": 13, "blue": 14}))
 
 
 def test():

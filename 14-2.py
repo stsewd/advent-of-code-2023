@@ -1,3 +1,4 @@
+import sys
 import pytest
 from pathlib import Path
 from textwrap import dedent
@@ -82,13 +83,9 @@ def solve(text: str, n: int) -> int:
     return get_value(matrix)
 
 
-def main():
-    text = Path("14.txt").read_text()
-    print(solve(text, n=1000000000))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text(), n=1000000000))
 
 
 def test():

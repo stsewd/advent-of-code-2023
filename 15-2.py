@@ -1,3 +1,4 @@
+import sys
 import pytest
 from pathlib import Path
 from textwrap import dedent
@@ -31,7 +32,8 @@ def solve(text: str) -> int:
 
 
 if __name__ == "__main__":
-    print(solve(input()))
+    p = Path(sys.argv[1])
+    print(solve(p.read_text()))
 
 
 def test():

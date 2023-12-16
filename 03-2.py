@@ -1,3 +1,4 @@
+import sys
 import pytest
 from pathlib import Path
 from textwrap import dedent
@@ -57,7 +58,7 @@ def get_adjacent_numbers(
 
 def solve(text: str) -> int:
     table = text.splitlines()
-    # Collect all numbers.
+    # Collect all numbers' positions.
     numbers = [[] for _ in range(len(table))]
     for i, row in enumerate(table):
         number = ""
@@ -85,13 +86,9 @@ def solve(text: str) -> int:
     return total
 
 
-def main():
-    text = Path("03.txt").read_text()
-    print(solve(text))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text()))
 
 
 def test():

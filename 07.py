@@ -1,3 +1,4 @@
+import sys
 import pytest
 from textwrap import dedent
 from pathlib import Path
@@ -82,13 +83,9 @@ def solve(text: str) -> int:
     return total
 
 
-def main():
-    text = Path("07.txt").read_text()
-    print(solve(text))
-
-
 if __name__ == "__main__":
-    main()
+    p = Path(sys.argv[1])
+    print(solve(p.read_text()))
 
 
 def test():
