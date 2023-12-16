@@ -85,32 +85,26 @@ def traverse(
     traverse(matrix, (i, j), direction, beans)
 
 
+def energize(matrix: list[list[str]], start: tuple[int, int], direction: str):
+    beans = set()
+    traverse(matrix, start, direction, beans)
+    return len(set((i, j) for i, j, _ in beans))
+
+
 def solve(text: str) -> int:
     matrix = [[c for c in line] for line in text.splitlines()]
     result = 0
     for i in range(len(matrix)):
-        beans = set()
-        traverse(matrix, (i, 0), RIGHT, beans)
-        n_beans = len(set((i, j) for i, j, _ in beans))
-        result = max(result, n_beans)
+        r = energize(matrix, (i, 0), RIGHT)
+        result = max(result, r)
+        r = energize(matrix, (i, len(matrix[i]) - 1), LEFT)
+        result = max(result, r)
 
     for j in range(len(matrix[0])):
-        beans = set()
-        traverse(matrix, (0, j), DOWN, beans)
-        n_beans = len(set((i, j) for i, j, _ in beans))
-        result = max(result, n_beans)
-
-    for i in range(len(matrix)):
-        beans = set()
-        traverse(matrix, (i, len(matrix[i]) - 1), LEFT, beans)
-        n_beans = len(set((i, j) for i, j, _ in beans))
-        result = max(result, n_beans)
-
-    for j in range(len(matrix[0])):
-        beans = set()
-        traverse(matrix, (len(matrix) - 1, j), UP, beans)
-        n_beans = len(set((i, j) for i, j, _ in beans))
-        result = max(result, n_beans)
+        r = energize(matrix, (0, j), DOWN)
+        result = max(result, r)
+        r = energize(matrix, (len(matrix) - 1, j), UP)
+        result = max(result, r)
 
     return result
 
