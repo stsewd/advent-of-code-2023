@@ -62,6 +62,7 @@ def get_value(matrix: list[list[str]]) -> int:
     return total
 
 
+# This was manually calculated by analyzing the value after each cycle (200), and look for a pattern.
 stable_after = {10: (2, 7), 100: (97, 18)}
 
 

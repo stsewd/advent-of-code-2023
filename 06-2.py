@@ -14,13 +14,13 @@ def solve(text: str) -> int:
     if (i * (time - i)) <= distance:
         i += 1
 
-    max_peek = (time - 1) // 2
+    max_peak = (time - 1) // 2
     if time % 2 == 0:
-        max_peek += 1
-    if i < max_peek:
+        max_peak += 1
+    if i < max_peak:
         if time % 2 == 0:
-            return (max_peek - i) * 2 + 1
-        return (max_peek - i + 1) * 2
+            return (max_peak - i) * 2 + 1
+        return (max_peak - i + 1) * 2
     return 0
 
 
